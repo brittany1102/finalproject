@@ -2,21 +2,78 @@
 <html>
 
 <head>
-    <!-- Your CSS  -->
-    <link rel="stylesheet" href="css/style.css">
+  <!-- Your CSS  -->
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="css/style.css">
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAA-jkTPDeQdz-1NgQ6ptSp61wBsJvQqQY&callback=initMap">
+  </script>
 </head>
 
 <body>
-     <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="index.html">Brittany's Portfolio</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li><a href="journey.html">journey</a></li>
-      <li><a href="journal.html">journal</a></li>
-    </ul> 
+  <div id="navbar">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">Home</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="journey.html">journey</a></li>
+          <li><a href="journal.html">journal</a></li>
+        </ul>
+      </div>
+    </nav>
   </div>
-</nav>
-    
-</body>
+  <p>helloo</p>
+  <button>button!</button>
+  <h3>Here to help</h3>
+  <div id="map"></div>
+
+  <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+  <div id="map"></div>
+  <script>
+    // This example adds a search box to a map, using the Google Place Autocomplete
+    // feature. People can enter geographical searches. The search box will return a
+    // pick list containing a mix of places and predicted search terms.
+
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+    var map;
+    var service;
+    var infowindow;
+
+    function initialize() {
+      var pyrmont = new google.maps.LatLng(-33.8665433, 151.1956316);
+
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: pyrmont,
+        zoom: 15
+      });
+
+      var request = {
+        location: pyrmont,
+        radius: '500',
+        type: ['restaurant']
+      };
+
+      service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(request, callback);
+    }
+
+    function callback(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          var place = results[i];
+          createMarker(results[i]);
+        }
+      }
+    }
+
+     </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAA-jkTPDeQdz-1NgQ6ptSp61wBsJvQqQY&libraries=places&callback=initialize" async defer></script>

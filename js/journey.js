@@ -2,9 +2,8 @@ $(document).ready(function(){
   
   
   function giphyURLWithSearchTerm(searchTerm) {
-    var NewUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/output?keyword=drug%20rehabilitation&key=AIzaSyAA-jkTPDeQdz-1NgQ6ptSp61wBsJvQqQY&radius=100";
+    var NewUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=rehab+centers+in+"+searchTerm+"&key=AIzaSyAMwaRN1IBRCMRQ9YzBn8ihEnV3tuC-pAA&callback=cb"
     return NewUrl;
-    
 }
 
 function appendImageToBody(srcURL) {
@@ -15,6 +14,7 @@ function callGiphyAPIWithSearchTerm(searchTerm) {
     $.ajax({
       url: giphyURLWithSearchTerm(searchTerm) ,
       method: "GET",
+      jsonp: 'cb',
       success: function(response) {
           console.log(response.data);
           for(var i=0;i< response.data.length;i++){

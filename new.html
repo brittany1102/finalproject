@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Places Searchbox</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+
+      #infowindow-content {
+        display: none;
+      }
+
+      #map #infowindow-content {
+        display: inline;
+      }
+
+      .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+      }
+
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
+  </head>
+  <body>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map"></div>
+
+// This example requires the Places library. Include the libraries=places
+// parameter when you first load the API. For example:
+// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+var map;
+var infoWindow;
+var service;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -33.867, lng: 151.206},
+    zoom: 15,
+    styles: [{
+      stylers: [{ visibility: 'simplified' }]
+    }, {
+      elementType: 'labels',
+      stylers: [{ visibility: 'off' }]
+    }]
+  });
+
+  infoWindow = new google.maps.InfoWindow();
+  service = new google.maps.places.PlacesService(map);
+
+  // The idle event is a debounced event, so we can query & listen without
+  // throwing too many requests at the server.
+  map.addListener('idle', performSearch);
+}
+
+function performSearch() {
+  var request = {
+    bounds: map.getBounds(),
+    keyword: 'rehab center'
+  };
+  service.radarSearch(request, callback);
+}
+
+function callback(results, status) {
+  if (status !== google.maps.places.PlacesServiceStatus.OK) {
+    console.error(status);
+    return;
+  }
+  for (var i = 0, result; result = results[i]; i++) {
+    addMarker(result);
+  }
+}
+
+function addMarker(place) {
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location,
+    icon: {
+      url: 'https://developers.google.com/maps/documentation/javascript/images/circle.png',
+      anchor: new google.maps.Point(10, 10),
+      scaledSize: new google.maps.Size(10, 17)
+    }
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    var request = {placeId: place.place_id};
+
+    service.getDetails(request, function(result, status) {
+      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+        console.error(status);
+        return;
+      }
+      infoWindow.setContent(result.name);
+      infoWindow.open(map, marker);
+    });
+  });
+}

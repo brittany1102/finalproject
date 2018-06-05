@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
-   <script src="js/journey.js"></script>
+  <script src="js/journey.js"></script>
   <title>Journey to Recovery</title>
   <title>Place searches</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -53,33 +53,32 @@
         var places = searchBox.getPlaces();
 
         if (places.length == 0) {
+          console.log("no places found");
           return;
         }
         console.log(places);
+        console.log(places[0].geometry.location.lat());
+        var lat = places[0].geometry.location.lat();
+        var long = places[0].geometry.location.lng();
+
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location:  pyrmont,
+          radius: 10000,
+          keyword: "rehab",// center",
+          //type: ['store']
+        }, callback);
       });
+      
 
-      infowindow = new google.maps.InfoWindow();
-      var service = new google.maps.places.PlacesService(map);
-      service.nearbySearch({
-        location: pyrmont,
-        radius: 500,
-        keyword: "rehab center",
-        type: ['store']
-      }, callback);
     }
 
-    function callback(results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-          createMarker(results[i]);
-        }
-      }
-    }
-
-    function createMarker(place) {
+     function createMarker(place) {
       var placeLoc = place.geometry.location;
       var marker = new google.maps.Marker({
         map: map,
+        icon: "pin.png",
         position: place.geometry.location
       });
 
@@ -88,6 +87,65 @@
         infowindow.open(map, this);
       });
     }
+    
+    function callback(results, status) {
+      console.log("panda");
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+        }
+      }
+    }
+     var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            // var icon = {
+              
+            //   size: new google.maps.Size(71, 71),
+            //   origin: new google.maps.Point(0, 0),
+            //   anchor: new google.maps.Point(17, 34),
+            //   scaledSize: new google.maps.Size(25, 25)
+            // };
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: map,
+              icon: "pin.png",
+              title: place.name,
+              position: place.geometry.location
+            }));
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
+
+  
   </script>
 </head>
 

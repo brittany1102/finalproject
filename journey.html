@@ -61,6 +61,7 @@
         var lat = places[0].geometry.location.lat();
         var long = places[0].geometry.location.lng();
         map.setCenter({lat: lat, lng: long});
+        map.setZoom(12);
         infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({

@@ -1,6 +1,7 @@
 body{
     background-color:pink;
     color:black;
+    font-family: 'Julius Sans One', sans-serif;
 }
 ul {
     list-style-type: none;
@@ -20,4 +21,21 @@ a {
     text-align: center;
     padding: 15px 15px;
     text-decoration: none;
+}
+.controls{
+    width:330px;
+    border-color:pink;
+    color:black;
+}
+#home{
+    color:#333;
+}
+#opening{
+    height:300px;
+    width:250px;
+    text-align:center
+    float:center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

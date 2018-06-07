@@ -4,6 +4,7 @@
 <head>
   <!-- Your CSS  -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
@@ -60,7 +61,7 @@
         console.log(places[0].geometry.location.lat());
         var lat = places[0].geometry.location.lat();
         var long = places[0].geometry.location.lng();
-        map.setCenter({lat: lat, lng: long});
+        map.setCenter({ lat: lat, lng: long });
         map.setZoom(12);
         infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(map);
@@ -71,7 +72,7 @@
           //type: ['store']
         }, callback);
       });
-      
+
 
     }
 
@@ -160,7 +161,6 @@
         </div>
         <ul class="nav navbar-nav">
           <li><a href="journey.html">journey</a></li>
-          <li><a href="journal.html">journal</a></li>
         </ul>
       </div>
     </nav>
